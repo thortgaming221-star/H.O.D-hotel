@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini GTA Mobile</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #222;
+    touch-action: none;
+}
+
+#game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: #444;
+}
+
+#player {
+    width: 40px;
+    height: 40px;
+    background: lime;
+    position: absolute;
+    border-radius: 5px;
+}
+
+#car {
+    width: 70px;
+    height: 35px;
+    background: red;
+    position: absolute;
+    border-radius: 5px;
+}
+
+.controls {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
+
+.btn {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+#action {
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    background: orange;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 70px;
+    font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+    <div id="player"></div>
+    <div id="car"></div>
+</div>
+
+<div class="controls">
+    <div class="btn" ontouchstart="move('up')">↑</div>
+    <div>
+        <span class="btn" ontouchstart="move('left')">←</span>
+        <span class="btn" ontouchstart="move('right')">→</span>
+    </div>
+    <div class="btn" ontouchstart="move('down')">↓</div>
+</div>
+
+<div id="action" ontouchstart="toggleCar()">E</div>
+
+<script>
+let player = document.getElementById("player");
+let car = document.getElementById("car");
+
+let playerX = 150, playerY = 150;
+let carX = 300, carY = 300;
+
+let speed = 10;
+let inCar = false;
+
+function update() {
+    if (!inCar) {
+        player.style.left = playerX + "px";
+        player.style.top = playerY + "px";
+    } else {
+        player.style.left = carX + "px";
+        player.style.top = carY + "px";
+    }
+
+    car.style.left = carX + "px";
+    car.style.top = carY + "px";
+}
+
+function move(dir) {
+    let moveSpeed = inCar ? 15 : speed;
+
+    if (dir === "up") {
+        if (inCar) carY -= moveSpeed;
+        else playerY -= moveSpeed;
+    }
+    if (dir === "down") {
+        if (inCar) carY += moveSpeed;
+        else playerY += moveSpeed;
+    }
+    if (dir === "left") {
+        if (inCar) carX -= moveSpeed;
+        else playerX -= moveSpeed;
+    }
+    if (dir === "right") {
+        if (inCar) carX += moveSpeed;
+        else playerX += moveSpeed;
+    }
+
+    update();
+}
+
+function toggleCar() {
+    let dist = Math.hypot(playerX - carX, playerY - carY);
+    if (dist < 100) {
+        inCar = !inCar;
+    }
+}
+
+update();
+</script>
+
+</body>
+</html>
